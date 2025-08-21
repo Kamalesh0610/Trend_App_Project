@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "kamalesh0610/trend-app-repo"
+        AWS_REGION   = "ap-south-1"
+        CLUSTER_NAME = "trend-app-cluster"
     }
 
     stages {
@@ -28,12 +30,13 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-                 withAWS(region: 'ap-south-1', credentials: 'aws-eks-creds') {
-                     sh '''
-                          aws eks update-kubeconfig --region ap-south-1 --name trend-app-cluster
-                          kubectl apply -f deployment.yaml
-                          kubectl apply -f service.yaml
-                     '''
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                  credentialsId: 'aws-eks-creds']]) {
+                    sh '''
+                        aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+                        kubectl apply -f deployment.yaml
+                        kubectl apply -f service.yaml
+                    '''
                 }
             }
         }
