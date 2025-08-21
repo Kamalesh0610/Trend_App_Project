@@ -28,10 +28,13 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-                sh '''
-                kubectl apply -f deployment.yaml
-                kubectl apply -f service.yaml
-                '''
+                 withAWS(region: 'ap-south-1', credentials: 'aws-eks-creds') {
+                     sh '''
+                          aws eks update-kubeconfig --region ap-south-1 --name trend-app-cluster
+                          kubectl apply -f deployment.yaml
+                          kubectl apply -f service.yaml
+                     '''
+                }
             }
         }
     }
