@@ -33,9 +33,18 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
                                   credentialsId: 'aws-eks-creds']]) {
                     sh '''
+                        # Configure kubeconfig for the cluster
                         aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+
+                        # Apply base manifests (without hardcoding image)
                         kubectl apply -f deployment.yaml
                         kubectl apply -f service.yaml
+
+                        # Update deployment to use the latest Docker image tag
+                        kubectl set image deployment/trend-app trend-app=$DOCKER_IMAGE:$BUILD_NUMBER --record
+
+                        # Verify rollout
+                        kubectl rollout status deployment/trend-app
                     '''
                 }
             }
