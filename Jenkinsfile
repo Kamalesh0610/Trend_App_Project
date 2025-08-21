@@ -41,10 +41,10 @@ pipeline {
                         kubectl apply -f service.yaml
 
                         # Update deployment to use the latest Docker image tag
-                        kubectl set image deployment/trend-app trend-app=$DOCKER_IMAGE:$BUILD_NUMBER --record
+                        kubectl set image deployment/trend-app-deployment trend-app=kamalesh0610/trend-app-repo:$BUILD_NUMBER --record
 
                         # Verify rollout
-                        kubectl rollout status deployment/trend-app
+                        kubectl rollout status deployment/trend-app-deployment
                     '''
                 }
             }
