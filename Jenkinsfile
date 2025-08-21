@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         DOCKER_IMAGE = "kamalesh0610/trend-app-repo"
-        KUBECONFIG = credentials('kubeconfig-file')  // optional if storing kubeconfig in Jenkins
     }
 
     stages {
@@ -22,17 +20,17 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub-creds']) {
+                withDockerRegistry([credentialsId: 'dockerhub-creds', url: 'https://index.docker.io/v1/']) {
                     sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to EKS') {
             steps {
                 sh '''
-                kubectl set image deployment/trend-app-deployment \
-                trend-app=$DOCKER_IMAGE:$BUILD_NUMBER --record
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
                 '''
             }
         }
