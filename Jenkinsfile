@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        DOCKER_IMAGE = "your-dockerhub-username/trend-app"
+        DOCKER_IMAGE = "kamalesh0610/trend-app-repo:latest"
         KUBECONFIG = credentials('kubeconfig-file')  // optional if storing kubeconfig in Jenkins
     }
 
