@@ -101,17 +101,66 @@ This project demonstrates end-to-end deployment of a React application to a prod
 
 ## Screenshots
 
-> Please attach screenshots of:
-> - Jenkins pipeline
-> - EKS cluster status
-> - Application running on LoadBalancer
-> - Monitoring dashboard
+> - AWS resources created
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/01.png)
+
+
+
+> - Jenkins running on Ubuntu
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/02.png)
+
+
+
+> - Installed plugins list
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/03.png)
+
+
+
+> - User-triggered build
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/07.png)
+
+
+
+> - Webhook-triggered build
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/08.png)
+
+
+
+> - Build stages overview
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/09.png)
+
+
+
+> -Grafana dashboards
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/10.png)
+
+
+
+> - Grafana Logs
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/11.png)
+
+
+
+> - Prometheus Monitoring
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/12.png)
+
+
+
+> - Final output: Trendify homepage
+![image alt](https://github.com/Kamalesh0610/Trend_App_Project/blob/main/Screenshot/01.png)
+
+
+
 
 ---
 
-## Application LoadBalancer ARN
+## LoadBalancer ARN
 
-> Replace with your deployed LoadBalancer ARN from AWS EKS.
+```
+
+http://a4b5db8103d2b462e80944139eeb5f4b-979003950.ap-south-1.elb.amazonaws.com/
+
+```
 
 ---
 
@@ -121,4 +170,3 @@ This project demonstrates end-to-end deployment of a React application to a prod
 - [main.tf](main.tf)
 - [deployment.yaml](deployment.yaml)
 - [service.yaml](service.yaml)
--
