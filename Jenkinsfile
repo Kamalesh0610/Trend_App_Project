@@ -10,7 +10,9 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/Kamalesh0610/Trend_App_Project.git'
+                git branch: 'main', 
+                    url: 'https://github.com/Kamalesh0610/Trend_App_Project.git',
+                    credentialsId: 'github-token'
             }
         }
 
@@ -20,34 +22,34 @@ pipeline {
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('Push Docker Image') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub-creds', url: 'https://index.docker.io/v1/']) {
                     sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
+                    sh 'docker tag $DOCKER_IMAGE:$BUILD_NUMBER $DOCKER_IMAGE:latest'
+                    sh 'docker push $DOCKER_IMAGE:latest'
                 }
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-creds']]) {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-eks-creds']]) {
                     sh '''
-                        # Configure kubeconfig for the cluster
                         aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-
-                        # Apply base manifests (without hardcoding image)
                         kubectl apply -f deployment.yaml
                         kubectl apply -f service.yaml
-
-                        # Update deployment to use the latest Docker image tag
-                        kubectl set image deployment/trend-app-deployment trend-app=kamalesh0610/trend-app-repo:$BUILD_NUMBER --record
-
-                        # Verify rollout
+                        kubectl set image deployment/trend-app-deployment trend-app=$DOCKER_IMAGE:$BUILD_NUMBER
                         kubectl rollout status deployment/trend-app-deployment
                     '''
                 }
             }
         }
+    }
+
+    post {
+        always { cleanWs() }
+        success { echo "Build & Deployment Successful!" }
+        failure { echo "Build/Deployment Failed!" }
     }
 }
